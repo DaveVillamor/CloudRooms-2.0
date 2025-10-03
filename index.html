@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en" data-bs-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" media="screen">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="src/style.css">
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="src/main.js"></script>
+
+    <title>cloudrooms-2-0</title>
+  </head>
+  <body>
+    <h1 class="text-center mt-5">Cloudrooms 2.0</h1>
+    
+    <!-- Container píldora con opciones de servicios -->
+    <div class="container-fluid mt-5 sticky-top">
+      <div class="row justify-content-center">
+        <div class="col-md-12 text-center">
+          <span class="text-white">*Activa los servicios que deseas ofrecer</span>
+        </div>
+        <div class="col-md-8">
+          <div class="pill-container">
+            <div class="pill-option">
+              <input type="checkbox" id="vuelos" class="pill-checkbox">
+              <label for="vuelos" class="pill-label">
+                <span class="pill-icon">✈️</span>
+                <span class="pill-text">Vuelos</span>
+              </label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="tours" class="pill-checkbox">
+              <label for="tours" class="pill-label">
+                <span class="pill-icon">🗺️</span>
+                <span class="pill-text">Tours</span>
+              </label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="hoteles" class="pill-checkbox">
+              <label for="hoteles" class="pill-label">
+                <span class="pill-icon">🏨</span>
+                <span class="pill-text">Hoteles</span>
+              </label>
+            </div>
+            <div class="pill-option">
+              <input type="checkbox" id="traslados" class="pill-checkbox">
+              <label for="traslados" class="pill-label">
+                <span class="pill-icon">🚗</span>
+                <span class="pill-text">Traslados</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- seccion de vuelos -->
+    <div class="flights-section" id="flights-section" style="display: none;">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="flight-container">
+              <div class="flight-header">
+                <h4 class="flight-title">Búsqueda de Vuelos</h4>
+                <button class="add-flight-btn" id="add-flight-btn">
+                  <span>+</span>
+                </button>
+              </div>
+              
+              <div class="flight-search-form">
+                <!-- Tipo de viaje - Botones separados arriba -->
+                <div class="trip-type-section">
+                  <label class="form-label">Tipo de viaje</label>
+                  <div class="trip-type-buttons">
+                    <button class="trip-type-btn active" data-type="round-trip" id="round-trip-btn">
+                      <span class="trip-icon">↔️</span>
+                      <span>Ida y vuelta</span>
+                    </button>
+                    <button class="trip-type-btn" data-type="one-way" id="one-way-btn">
+                      <span class="trip-icon">→</span>
+                      <span>Solo ida</span>
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Origen y destino -->
+                <div class="row mt-4">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Desde</label>
+                      <input type="text" class="form-control" id="from-location" placeholder="Ciudad de origen">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Hasta</label>
+                      <input type="text" class="form-control" id="to-location" placeholder="Ciudad de destino">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Fechas con flatpickr -->
+                <div class="row mt-3">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Fecha de ida</label>
+                      <input type="text" class="form-control" id="departure-date" placeholder="Seleccionar fecha">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6" id="return-date-col">
+                    <div class="form-group">
+                      <label class="form-label">Fecha de vuelta</label>
+                      <input type="text" class="form-control" id="return-date" placeholder="Seleccionar fecha">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Pasajeros, niños y búsqueda -->
+                <div class="row mt-3">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Pasajeros</label>
+                      <div class="counter-control">
+                        <button class="counter-btn" id="passengers-minus">−</button>
+                        <span class="counter-value" id="passengers-value">1</span>
+                        <button class="counter-btn" id="passengers-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Niños</label>
+                      <div class="counter-control">
+                        <button class="counter-btn" id="children-minus">−</button>
+                        <span class="counter-value" id="children-value">0</span>
+                        <button class="counter-btn" id="children-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 d-flex align-items-end">
+                    <button class="search-flight-btn" id="search-flight-btn">
+                      Buscar Vuelos
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="flight-results" id="flight-results" style="display: none;">
+                <div class="results-header">
+                  <h5>Resultados de búsqueda</h5>
+                  <p class="results-subtitle">Selecciona el vuelo que mejor se adapte a tus necesidades</p>
+                </div>
+                
+                <div class="flight-cards-container" id="flight-cards-container">
+                  <!-- Las tarjetas de vuelos se generarán aquí dinámicamente -->
+                </div>
+                
+                <!-- JSON oculto para debugging -->
+                <details class="debug-section">
+                  <summary>Ver datos JSON (desarrollo)</summary>
+                  <pre id="json-output"></pre>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- seccion de hoteles -->
+    <div class="hotels-section" id="hotels-section" style="display: none;">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="hotel-container">
+              <div class="hotel-header">
+                <h4 class="hotel-title">Búsqueda de Hoteles</h4>
+                <button class="add-hotel-btn" id="add-hotel-btn">
+                  <span>+</span>
+                </button>
+              </div>
+              
+              <div class="hotel-search-form">
+                <!-- Destino y fechas -->
+                <div class="row">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">Destino</label>
+                      <input type="text" class="form-control" id="hotel-destination" placeholder="Ciudad o destino">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Check-in</label>
+                      <input type="text" class="form-control" id="checkin-date" placeholder="Fecha de entrada">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Check-out</label>
+                      <input type="text" class="form-control" id="checkout-date" placeholder="Fecha de salida">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-2">
+                    <div class="form-group">
+                      <label class="form-label">Habitaciones</label>
+                      <div class="counter-control">
+                        <button class="counter-btn" id="rooms-minus">−</button>
+                        <span class="counter-value" id="rooms-value">1</span>
+                        <button class="counter-btn" id="rooms-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Huéspedes y búsqueda -->
+                <div class="row mt-3">
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Adultos</label>
+                      <div class="counter-control">
+                        <button class="counter-btn" id="adults-minus">−</button>
+                        <span class="counter-value" id="adults-value">2</span>
+                        <button class="counter-btn" id="adults-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-3">
+                    <div class="form-group">
+                      <label class="form-label">Niños</label>
+                      <div class="counter-control">
+                        <button class="counter-btn" id="hotel-children-minus">−</button>
+                        <span class="counter-value" id="hotel-children-value">0</span>
+                        <button class="counter-btn" id="hotel-children-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 d-flex align-items-end">
+                    <button class="search-hotel-btn" id="search-hotel-btn">
+                      Buscar Hoteles
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="hotel-results" id="hotel-results" style="display: none;">
+                <div class="results-header">
+                  <h5>Resultados de búsqueda</h5>
+                  <p class="results-subtitle">Selecciona el hotel que mejor se adapte a tus necesidades</p>
+                </div>
+                
+                <div class="hotel-cards-container" id="hotel-cards-container">
+                  <!-- Las tarjetas de hoteles se generarán aquí dinámicamente -->
+                </div>
+                
+                <!-- JSON oculto para debugging -->
+                <details class="debug-section">
+                  <summary>Ver datos JSON (desarrollo)</summary>
+                  <pre id="hotel-json-output"></pre>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>
