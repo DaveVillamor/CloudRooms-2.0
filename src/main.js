@@ -21,6 +21,16 @@ document.addEventListener('DOMContentLoaded', function() {
   let hotelChildrenCount = 0;
   let checkinFlatpickr, checkoutFlatpickr;
   
+  // Variables para traslados
+  let transferPassengersCount = 1;
+  let currentTransferType = 'taxi';
+  let transferFlatpickr;
+  
+  // Variables para tours
+  let tourParticipantsCount = 1;
+  let currentTourType = 'city';
+  let tourFlatpickr;
+  
   // Funcionalidad para mostrar/ocultar secciones según checkboxes
   checkboxes.forEach(checkbox => {
     checkbox.addEventListener('change', function() {
@@ -64,6 +74,40 @@ document.addEventListener('DOMContentLoaded', function() {
           // Limpiar flatpickr al ocultar
           if (checkinFlatpickr) checkinFlatpickr.destroy();
           if (checkoutFlatpickr) checkoutFlatpickr.destroy();
+        }
+      }
+      
+      // Mostrar/ocultar sección de traslados
+      if (this.id === 'traslados') {
+        const transferSection = document.getElementById('transfer-section');
+        if (this.checked) {
+          transferSection.style.display = 'block';
+          // Inicializar flatpickr para traslados después de mostrar la sección
+          setTimeout(() => {
+            initializeTransferFlatpickr();
+          }, 100);
+        } else {
+          transferSection.style.display = 'none';
+          document.getElementById('transfer-results').style.display = 'none';
+          // Limpiar flatpickr al ocultar
+          if (transferFlatpickr) transferFlatpickr.destroy();
+        }
+      }
+      
+      // Mostrar/ocultar sección de tours
+      if (this.id === 'tours') {
+        const tourSection = document.getElementById('tour-section');
+        if (this.checked) {
+          tourSection.style.display = 'block';
+          // Inicializar flatpickr para tours después de mostrar la sección
+          setTimeout(() => {
+            initializeTourFlatpickr();
+          }, 100);
+        } else {
+          tourSection.style.display = 'none';
+          document.getElementById('tour-results').style.display = 'none';
+          // Limpiar flatpickr al ocultar
+          if (tourFlatpickr) tourFlatpickr.destroy();
         }
       }
       
@@ -146,6 +190,10 @@ document.addEventListener('DOMContentLoaded', function() {
       adultsCount = value;
     } else if (counterId === 'hotel-children') {
       hotelChildrenCount = value;
+    } else if (counterId === 'transfer-passengers') {
+      transferPassengersCount = value;
+    } else if (counterId === 'tour-participants') {
+      tourParticipantsCount = value;
     }
   }
   
@@ -157,6 +205,12 @@ document.addEventListener('DOMContentLoaded', function() {
   const getRoomsCount = setupCounter('rooms', 'rooms-value', 'rooms-minus', 'rooms-plus', 1, 5, 1);
   const getAdultsCount = setupCounter('adults', 'adults-value', 'adults-minus', 'adults-plus', 1, 8, 2);
   const getHotelChildrenCount = setupCounter('hotel-children', 'hotel-children-value', 'hotel-children-minus', 'hotel-children-plus', 0, 6, 0);
+  
+  // Inicializar contadores de traslados
+  const getTransferPassengersCount = setupCounter('transfer-passengers', 'transfer-passengers-value', 'transfer-passengers-minus', 'transfer-passengers-plus', 1, 8, 1);
+  
+  // Inicializar contadores de tours
+  const getTourParticipantsCount = setupCounter('tour-participants', 'tour-participants-value', 'tour-participants-minus', 'tour-participants-plus', 1, 20, 1);
   
   // Inicializar flatpickr para fechas
   function initializeFlatpickr() {
@@ -215,6 +269,21 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Datepicker para check-out
     checkoutFlatpickr = flatpickr('#checkout-date', {
+      ...commonConfig
+    });
+  }
+  
+  // Inicializar flatpickr para fechas de traslados
+  function initializeTransferFlatpickr() {
+    const commonConfig = {
+      dateFormat: 'Y-m-d',
+      minDate: 'today',
+      locale: 'es',
+      theme: 'dark'
+    };
+    
+    // Datepicker para fecha de viaje
+    transferFlatpickr = flatpickr('#transfer-date', {
       ...commonConfig
     });
   }
@@ -667,7 +736,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         aircraft: 'Boeing 737-800',
         stops: 'Directo',
-        class: 'Económica',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
         type: 'departure'
       },
       {
@@ -692,7 +761,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         aircraft: 'Airbus A320',
         stops: 'Directo',
-        class: 'Económica',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
         type: 'departure'
       },
       {
@@ -717,7 +786,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         aircraft: 'Boeing 737-900',
         stops: 'Directo',
-        class: 'Económica',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
         type: 'departure'
       }
     ];
@@ -745,7 +814,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         aircraft: 'Boeing 737-800',
         stops: 'Directo',
-        class: 'Económica',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
         type: 'return'
       },
       {
@@ -770,7 +839,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         aircraft: 'Airbus A320',
         stops: 'Directo',
-        class: 'Económica',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
         type: 'return'
       },
       {
@@ -795,7 +864,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         aircraft: 'Boeing 737-900',
         stops: 'Directo',
-        class: 'Económica',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
         type: 'return'
       }
     ] : [];
@@ -1150,6 +1219,704 @@ document.addEventListener('DOMContentLoaded', function() {
     alert(`¡Reserva de hotel confirmada!\nHotel: ${selection.hotel}\nHabitaciones: ${selection.rooms}\nHuéspedes: ${selection.adults + selection.children}`);
   }
   
+  // Funcionalidad para botones de tipo de traslado
+  const transferTypeButtons = document.querySelectorAll('.transfer-type-btn');
+  transferTypeButtons.forEach(button => {
+    button.addEventListener('click', function() {
+      // Remover clase active de todos los botones
+      transferTypeButtons.forEach(btn => btn.classList.remove('active'));
+      
+      // Agregar clase active al botón clickeado
+      this.classList.add('active');
+      
+      // Actualizar tipo de traslado actual
+      currentTransferType = this.dataset.type;
+      
+      console.log('Tipo de traslado seleccionado:', currentTransferType);
+    });
+  });
+  
+  // Funcionalidad para búsqueda de traslados
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'search-transfer-btn') {
+      const searchData = {
+        transferType: currentTransferType,
+        from: document.getElementById('transfer-from').value,
+        to: document.getElementById('transfer-to').value,
+        date: document.getElementById('transfer-date').value,
+        time: document.getElementById('transfer-time').value,
+        passengers: transferPassengersCount,
+        searchTimestamp: new Date().toISOString(),
+        searchId: generateSearchId()
+      };
+      
+      // Simular respuesta de API
+      const apiResponse = simulateTransferAPI(searchData);
+      
+      // Generar tarjetas de traslados
+      generateTransferCards(apiResponse.results.transfers);
+      
+      // Mostrar JSON para debugging
+      document.getElementById('transfer-json-output').textContent = JSON.stringify(apiResponse, null, 2);
+      document.getElementById('transfer-results').style.display = 'block';
+      
+      // Scroll a resultados
+      document.getElementById('transfer-results').scrollIntoView({ behavior: 'smooth' });
+      
+      console.log('Búsqueda de traslados:', searchData);
+      console.log('Respuesta API simulada:', apiResponse);
+    }
+  });
+  
+  // Funcionalidad para agregar nuevo traslado
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'add-transfer-btn') {
+      console.log('Agregar nuevo traslado');
+      
+      // Efecto visual del botón
+      e.target.style.transform = 'scale(0.95)';
+      setTimeout(() => {
+        e.target.style.transform = '';
+      }, 150);
+    }
+  });
+  
+  // Funciones para traslados
+  function simulateTransferAPI(searchData) {
+    const transfers = [
+      {
+        id: 'TRF001',
+        company: 'Traslados Nacionales',
+        type: searchData.transferType,
+        departure: {
+          time: '08:30',
+          location: 'Terminal ' + searchData.from,
+          platform: 'Plataforma 1'
+        },
+        arrival: {
+          time: '12:45',
+          location: 'Terminal ' + searchData.to,
+          platform: 'Plataforma 3'
+        },
+        duration: currentTransferType === 'taxi' ? '3h 30m' : '4h 15m',
+        price: {
+          passenger: currentTransferType === 'taxi' ? 120000 : 45000,
+          currency: 'COP'
+        },
+        vehicle: getVehicleByType(searchData.transferType),
+        stops: 'Directo',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
+        amenities: getAmenitiesByType(searchData.transferType),
+        petFriendly: false
+      },
+      {
+        id: 'TRF002',
+        company: 'Viajes Express',
+        type: searchData.transferType,
+        departure: {
+          time: '14:20',
+          location: 'Terminal ' + searchData.from,
+          platform: 'Plataforma 2'
+        },
+        arrival: {
+          time: '18:35',
+          location: 'Terminal ' + searchData.to,
+          platform: 'Plataforma 1'
+        },
+        duration: currentTransferType === 'taxi' ? '3h 30m' : '4h 15m',
+        price: {
+          passenger: currentTransferType === 'taxi' ? 140000 : 52000,
+          currency: 'COP'
+        },
+        vehicle: getVehicleByType(searchData.transferType),
+        stops: 'Directo',
+        class: currentTransferType === 'taxi' ? 'Privado' : 'Económica',
+        amenities: getAmenitiesByType(searchData.transferType),
+        petFriendly: false
+      },
+      {
+        id: 'TRF003',
+        company: 'Traslados Premium',
+        type: searchData.transferType,
+        departure: {
+          time: '19:45',
+          location: 'Terminal ' + searchData.from,
+          platform: 'Plataforma 3'
+        },
+        arrival: {
+          time: '23:30',
+          location: 'Terminal ' + searchData.to,
+          platform: 'Plataforma 2'
+        },
+        duration: currentTransferType === 'taxi' ? '3h 00m' : '3h 45m',
+        price: {
+          passenger: currentTransferType === 'taxi' ? 100000 : 38000,
+          currency: 'COP'
+        },
+        vehicle: getVehicleByType(searchData.transferType),
+        stops: 'Directo',
+        class: currentTransferType === 'taxi' ? 'Premium Privado' : 'Premium',
+        amenities: getAmenitiesByType(searchData.transferType),
+        petFriendly: false
+      }
+    ];
+    
+    return {
+      search: searchData,
+      results: {
+        totalTransfers: transfers.length,
+        searchTime: '0.189s',
+        transfers: transfers
+      },
+      metadata: {
+        apiVersion: '1.0',
+        timestamp: new Date().toISOString(),
+        provider: 'CloudRooms Transfer API'
+      }
+    };
+  }
+  
+  function getVehicleByType(type) {
+    const vehicles = {
+      'taxi': 'Taxi Privado',
+      'bus': 'Autobús Mercedes-Benz',
+      'train': 'Tren de Alta Velocidad',
+      'ferry': 'Ferry Oceánico'
+    };
+    return vehicles[type] || 'Vehículo Estándar';
+  }
+  
+  function getAmenitiesByType(type) {
+    const amenities = {
+      'taxi': ['Aire Acondicionado', 'WiFi', 'Conductor Profesional'],
+      'bus': ['WiFi', 'Aire Acondicionado', 'Baño', 'TV'],
+      'train': ['WiFi', 'Restaurante', 'Bar', 'Compartimentos'],
+      'ferry': ['WiFi', 'Restaurante', 'Bar', 'Cubierta', 'Camarotes']
+    };
+    return amenities[type] || ['Aire Acondicionado'];
+  }
+  
+  
+  function generateTransferCards(transfers) {
+    const container = document.getElementById('transfer-cards-container');
+    container.innerHTML = '';
+    
+    // Variable para almacenar selección
+    window.selectedTransfer = null;
+    
+    transfers.forEach(transfer => {
+      const card = createTransferCard(transfer);
+      container.appendChild(card);
+    });
+    
+    // Generar sección de finalización
+    const finalizeSection = createTransferFinalizeSection();
+    container.appendChild(finalizeSection);
+  }
+  
+  function createTransferCard(transfer) {
+    const card = document.createElement('div');
+    card.className = 'transfer-card';
+    card.dataset.transferId = transfer.id;
+    
+    const totalPrice = transfer.price.passenger * transferPassengersCount;
+    const formattedPrice = new Intl.NumberFormat('es-CO', {
+      style: 'currency',
+      currency: 'COP',
+      minimumFractionDigits: 0
+    }).format(totalPrice);
+    
+    // Obtener iniciales de la empresa
+    const companyInitials = transfer.company.split(' ').map(word => word[0]).join('').toUpperCase();
+    
+    // Obtener icono según tipo
+    const typeIcon = {
+      'taxi': '🚕',
+      'bus': '🚌',
+      'train': '🚂',
+      'ferry': '⛴️'
+    }[transfer.type] || '🚕';
+    
+    card.innerHTML = `
+      <div class="transfer-card-header">
+        <div class="transfer-info">
+          <div class="transfer-logo">${companyInitials}</div>
+          <div class="transfer-details">
+            <h6>${transfer.company}</h6>
+            <p class="transfer-type">${typeIcon} ${transfer.type.charAt(0).toUpperCase() + transfer.type.slice(1)}</p>
+          </div>
+        </div>
+        <div class="transfer-price">
+          <p class="price-amount">${formattedPrice}</p>
+          <p class="price-currency">por persona</p>
+        </div>
+      </div>
+      
+      <div class="transfer-route">
+        <div class="route-segment">
+          <p class="location-name">${transfer.departure.location}</p>
+          <p class="transfer-time">${transfer.departure.time}</p>
+          <p class="platform-info">${transfer.departure.platform}</p>
+        </div>
+        
+        <div class="transfer-path">
+          <div class="transfer-path-line"></div>
+        </div>
+        
+        <div class="route-segment">
+          <p class="location-name">${transfer.arrival.location}</p>
+          <p class="transfer-time">${transfer.arrival.time}</p>
+          <p class="platform-info">${transfer.arrival.platform}</p>
+        </div>
+      </div>
+      
+      <div class="transfer-amenities">
+        ${transfer.amenities.map(amenity => `<span class="amenity-tag">${amenity}</span>`).join('')}
+      </div>
+      
+      <div class="transfer-details">
+        <div class="transfer-info-details">
+          <div class="transfer-info-item">
+            <span class="transfer-info-label">Duración</span>
+            <span class="transfer-info-value">${transfer.duration}</span>
+          </div>
+          <div class="transfer-info-item">
+            <span class="transfer-info-label">Paradas</span>
+            <span class="transfer-info-value">${transfer.stops}</span>
+          </div>
+          <div class="transfer-info-item">
+            <span class="transfer-info-label">Vehículo</span>
+            <span class="transfer-info-value">${transfer.vehicle}</span>
+          </div>
+          <div class="transfer-info-item">
+            <span class="transfer-info-label">Clase</span>
+            <span class="transfer-info-value">${transfer.class}</span>
+          </div>
+        </div>
+        <button class="select-transfer-btn" data-transfer-id="${transfer.id}">
+          Seleccionar
+        </button>
+      </div>
+    `;
+    
+    // Agregar evento de click a la tarjeta
+    card.addEventListener('click', function(e) {
+      if (!e.target.classList.contains('select-transfer-btn')) {
+        selectTransfer(transfer.id);
+      }
+    });
+    
+    // Agregar evento al botón de seleccionar
+    const selectBtn = card.querySelector('.select-transfer-btn');
+    selectBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      selectTransfer(transfer.id);
+    });
+    
+    return card;
+  }
+  
+  function selectTransfer(transferId) {
+    // Remover selección anterior
+    document.querySelectorAll('.transfer-card').forEach(card => {
+      card.classList.remove('selected');
+      const btn = card.querySelector('.select-transfer-btn');
+      if (btn) {
+        btn.textContent = 'Seleccionar';
+        btn.classList.remove('selected');
+      }
+    });
+    
+    // Seleccionar nueva tarjeta
+    const selectedCard = document.querySelector(`[data-transfer-id="${transferId}"]`);
+    if (selectedCard) {
+      selectedCard.classList.add('selected');
+      
+      const selectBtn = selectedCard.querySelector('.select-transfer-btn');
+      if (selectBtn) {
+        selectBtn.textContent = '✓ Seleccionado';
+        selectBtn.classList.add('selected');
+      }
+      
+      // Almacenar selección
+      window.selectedTransfer = transferId;
+      
+      // Actualizar resumen
+      updateTransferSelectionSummary();
+      
+      console.log('Traslado seleccionado:', transferId);
+    }
+  }
+  
+  function updateTransferSelectionSummary() {
+    const transferSummary = document.getElementById('transfer-summary');
+    const finalizeBtn = document.getElementById('finalize-transfer-btn');
+    
+    if (transferSummary) {
+      transferSummary.textContent = window.selectedTransfer 
+        ? `Traslado seleccionado: ${window.selectedTransfer}` 
+        : 'Traslado: No seleccionado';
+    }
+    
+    // Habilitar botón de finalizar
+    if (finalizeBtn) {
+      finalizeBtn.disabled = !window.selectedTransfer;
+    }
+    
+    // Actualizar resumen de precios
+    updateTransferPriceSummary();
+  }
+  
+  function updateTransferPriceSummary() {
+    const priceSummary = document.getElementById('transfer-price-summary');
+    const transferSelectedPrice = document.getElementById('transfer-selected-price');
+    const passengersCount = document.getElementById('transfer-passengers-count');
+    const totalPrice = document.getElementById('transfer-total-price');
+    
+    if (!priceSummary) return;
+    
+    // Mostrar/ocultar resumen de precios
+    priceSummary.style.display = window.selectedTransfer ? 'block' : 'none';
+    
+    if (window.selectedTransfer) {
+      // Obtener precio del traslado seleccionado
+      const transferCard = document.querySelector(`[data-transfer-id="${window.selectedTransfer}"]`);
+      if (transferCard) {
+        const priceText = transferCard.querySelector('.price-amount').textContent;
+        const price = parsePrice(priceText);
+        
+        if (transferSelectedPrice) transferSelectedPrice.textContent = formatPrice(price);
+        if (passengersCount) passengersCount.textContent = transferPassengersCount;
+        if (totalPrice) totalPrice.textContent = formatPrice(price);
+      }
+    }
+  }
+  
+  function createTransferFinalizeSection() {
+    const section = document.createElement('div');
+    section.className = 'finalize-section';
+    
+    section.innerHTML = `
+      <div class="finalize-container">
+        <div class="selection-summary">
+          <h6>Resumen de Selección</h6>
+          <div id="transfer-selection-details">
+            <p id="transfer-summary">Traslado: No seleccionado</p>
+          </div>
+          <div class="price-summary" id="transfer-price-summary" style="display: none;">
+            <div class="price-breakdown">
+              <div class="price-item">
+                <span>Traslado seleccionado</span>
+                <span id="transfer-selected-price">$0</span>
+              </div>
+              <div class="price-item">
+                <span>Pasajeros</span>
+                <span id="transfer-passengers-count">1</span>
+              </div>
+              <div class="price-divider"></div>
+              <div class="price-item total">
+                <span>Total</span>
+                <span id="transfer-total-price">$0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button class="finalize-btn" id="finalize-transfer-btn" disabled>
+          Finalizar Reserva
+        </button>
+      </div>
+    `;
+    
+    // Agregar evento al botón de finalizar
+    const finalizeBtn = section.querySelector('#finalize-transfer-btn');
+    finalizeBtn.addEventListener('click', finalizeTransferReservation);
+    
+    return section;
+  }
+  
+  function finalizeTransferReservation() {
+    const selection = {
+      transfer: window.selectedTransfer,
+      type: currentTransferType,
+      passengers: transferPassengersCount
+    };
+    
+    console.log('Reserva de traslado finalizada:', selection);
+    
+    const message = `¡Reserva de traslado confirmada!\nTraslado: ${selection.transfer}\nTipo: ${selection.type}\nPasajeros: ${selection.passengers}`;
+    
+    alert(message);
+  }
+  
+  // Funcionalidad del resumen de reserva
+  function updateReservationSummary() {
+    const summaryBtn = document.getElementById('reservation-summary-btn');
+    const summaryCount = document.getElementById('summary-count');
+    const summaryTotal = document.getElementById('summary-total');
+    
+    let totalServices = 0;
+    let totalPrice = 0;
+    let hasSelections = false;
+    
+    // Contar vuelos seleccionados
+    if (window.selectedFlight) {
+      totalServices++;
+      hasSelections = true;
+      const flightCard = document.querySelector(`[data-flight-id="${window.selectedFlight}"]`);
+      if (flightCard) {
+        const priceText = flightCard.querySelector('.price-amount').textContent;
+        totalPrice += parsePrice(priceText);
+      }
+    }
+    
+    // Contar hoteles seleccionados
+    if (window.selectedHotel) {
+      totalServices++;
+      hasSelections = true;
+      const hotelCard = document.querySelector(`[data-hotel-id="${window.selectedHotel}"]`);
+      if (hotelCard) {
+        const priceText = hotelCard.querySelector('.price-amount').textContent;
+        totalPrice += parsePrice(priceText);
+      }
+    }
+    
+    // Contar traslados seleccionados
+    if (window.selectedTransfer) {
+      totalServices++;
+      hasSelections = true;
+      const transferCard = document.querySelector(`[data-transfer-id="${window.selectedTransfer}"]`);
+      if (transferCard) {
+        const priceText = transferCard.querySelector('.price-amount').textContent;
+        totalPrice += parsePrice(priceText);
+      }
+    }
+    
+    // Actualizar UI
+    if (summaryCount) {
+      summaryCount.textContent = totalServices === 1 ? '1 servicio' : `${totalServices} servicios`;
+    }
+    
+    if (summaryTotal) {
+      summaryTotal.textContent = formatPrice(totalPrice);
+    }
+    
+    // Mostrar/ocultar botón
+    if (summaryBtn) {
+      summaryBtn.style.display = 'flex'; // Siempre visible para testing
+      if (!hasSelections) {
+        summaryBtn.style.opacity = '0.5';
+      } else {
+        summaryBtn.style.opacity = '1';
+      }
+    }
+  }
+  
+  function showReservationModal() {
+    const modal = document.getElementById('reservation-modal');
+    const modalBody = document.getElementById('modal-body');
+    const modalTotal = document.getElementById('modal-total');
+    
+    if (!modal || !modalBody) return;
+    
+    let totalPrice = 0;
+    let modalContent = '';
+    
+    // Resumen de vuelos
+    if (window.selectedFlight) {
+      const flightCard = document.querySelector(`[data-flight-id="${window.selectedFlight}"]`);
+      if (flightCard) {
+        const company = flightCard.querySelector('.flight-company').textContent;
+        const route = flightCard.querySelector('.flight-route').textContent;
+        const priceText = flightCard.querySelector('.price-amount').textContent;
+        const price = parsePrice(priceText);
+        totalPrice += price;
+        
+        modalContent += `
+          <div class="reservation-item">
+            <div class="item-icon">✈️</div>
+            <div class="item-details">
+              <div class="item-title">Vuelo</div>
+              <div class="item-description">${company} - ${route}</div>
+              <div class="item-passengers">${passengersCount} pasajero${passengersCount > 1 ? 's' : ''}</div>
+            </div>
+            <div class="item-price">${formatPrice(price)}</div>
+          </div>
+        `;
+      }
+    }
+    
+    // Resumen de hoteles
+    if (window.selectedHotel) {
+      const hotelCard = document.querySelector(`[data-hotel-id="${window.selectedHotel}"]`);
+      if (hotelCard) {
+        const name = hotelCard.querySelector('.hotel-name').textContent;
+        const location = hotelCard.querySelector('.hotel-location').textContent;
+        const priceText = hotelCard.querySelector('.price-amount').textContent;
+        const price = parsePrice(priceText);
+        totalPrice += price;
+        
+        modalContent += `
+          <div class="reservation-item">
+            <div class="item-icon">🏨</div>
+            <div class="item-details">
+              <div class="item-title">Hotel</div>
+              <div class="item-description">${name}</div>
+              <div class="item-description">${location}</div>
+              <div class="item-passengers">${roomsCount} habitación${roomsCount > 1 ? 'es' : ''}, ${adultsCount + hotelChildrenCount} huésped${adultsCount + hotelChildrenCount > 1 ? 'es' : ''}</div>
+            </div>
+            <div class="item-price">${formatPrice(price)}</div>
+          </div>
+        `;
+      }
+    }
+    
+    // Resumen de traslados
+    if (window.selectedTransfer) {
+      const transferCard = document.querySelector(`[data-transfer-id="${window.selectedTransfer}"]`);
+      if (transferCard) {
+        const company = transferCard.querySelector('.transfer-company').textContent;
+        const route = transferCard.querySelector('.transfer-route').textContent;
+        const priceText = transferCard.querySelector('.price-amount').textContent;
+        const price = parsePrice(priceText);
+        totalPrice += price;
+        
+        modalContent += `
+          <div class="reservation-item">
+            <div class="item-icon">🚕</div>
+            <div class="item-details">
+              <div class="item-title">Traslado</div>
+              <div class="item-description">${company} - ${route}</div>
+              <div class="item-passengers">${transferPassengersCount} pasajero${transferPassengersCount > 1 ? 's' : ''}</div>
+            </div>
+            <div class="item-price">${formatPrice(price)}</div>
+          </div>
+        `;
+      }
+    }
+    
+    if (modalContent === '') {
+      modalContent = '<div class="no-selections">No hay servicios seleccionados</div>';
+    }
+    
+    modalBody.innerHTML = modalContent;
+    if (modalTotal) {
+      modalTotal.textContent = formatPrice(totalPrice);
+    }
+    
+    modal.style.display = 'flex';
+  }
+  
+  function hideReservationModal() {
+    const modal = document.getElementById('reservation-modal');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+  
+  // Event listeners para el resumen
+  document.addEventListener('click', function(e) {
+    if (e.target && e.target.id === 'reservation-summary-btn') {
+      showReservationModal();
+    }
+    
+    if (e.target && (e.target.id === 'modal-close' || e.target.classList.contains('reservation-modal'))) {
+      hideReservationModal();
+    }
+  });
+  
+  // Actualizar resumen cuando se selecciona algo
+  function updateAllSummaries() {
+    updateSelectedServices();
+    updateReservationSummary();
+  }
+  
+  // Función para forzar la visibilidad del botón (para testing)
+  function showReservationButton() {
+    const summaryBtn = document.getElementById('reservation-summary-btn');
+    if (summaryBtn) {
+      summaryBtn.style.display = 'flex';
+      summaryBtn.style.background = 'linear-gradient(135deg, #1e40af, #1e3a8a)';
+      console.log('Botón de reserva forzado a ser visible');
+    } else {
+      console.log('No se encontró el botón de reserva');
+    }
+  }
+  
+  // Mostrar botón después de 2 segundos para testing
+  setTimeout(showReservationButton, 2000);
+  
+  // También mostrar inmediatamente
+  setTimeout(showReservationButton, 100);
+  
+  // Reemplazar todas las llamadas a updateSelectedServices con updateAllSummaries
+  const originalUpdateSelectedServices = updateSelectedServices;
+  window.updateSelectedServices = updateAllSummaries;
+  
+  // También actualizar cuando se selecciona un vuelo
+  window.selectFlight = function(flightId) {
+    window.selectedFlight = flightId;
+    updateAllSummaries();
+  };
+  
+  // También actualizar cuando se selecciona un hotel
+  window.selectHotel = function(hotelId) {
+    window.selectedHotel = hotelId;
+    updateAllSummaries();
+  };
+  
+  // También actualizar cuando se selecciona un traslado
+  window.selectTransfer = function(transferId) {
+    window.selectedTransfer = transferId;
+    updateAllSummaries();
+  };
+
+  // Funcionalidad básica para tours
+  function initializeTourFlatpickr() {
+    const tourDateInput = document.getElementById('tour-date');
+    if (tourDateInput && !tourFlatpickr) {
+      tourFlatpickr = flatpickr(tourDateInput, {
+        dateFormat: 'd/m/Y',
+        minDate: 'today',
+        locale: 'es',
+        onChange: function(selectedDates, dateStr, instance) {
+          console.log('Fecha de tour seleccionada:', dateStr);
+        }
+      });
+    }
+  }
+  
+  // Event listeners para tours
+  document.addEventListener('click', function(e) {
+    // Botones de tipo de tour
+    if (e.target && e.target.classList.contains('tour-type-btn')) {
+      e.preventDefault();
+      
+      // Remover clase active de todos los botones
+      document.querySelectorAll('.tour-type-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Agregar clase active al botón clickeado
+      e.target.classList.add('active');
+      
+      // Actualizar tipo de tour seleccionado
+      currentTourType = e.target.dataset.type;
+      console.log('Tipo de tour seleccionado:', currentTourType);
+    }
+    
+    // Botón de búsqueda de tours
+    if (e.target && e.target.id === 'search-tour-btn') {
+      console.log('Buscando tours...');
+      alert('Funcionalidad de tours en desarrollo. Próximamente disponible.');
+    }
+    
+    // Botón de agregar tour
+    if (e.target && e.target.id === 'add-tour-btn') {
+      console.log('Agregando nuevo tour...');
+      alert('Funcionalidad de agregar tour en desarrollo.');
+    }
+  });
+
   // Inicializar
-  updateSelectedServices();
+  updateAllSummaries();
 });

@@ -277,5 +277,262 @@
       </div>
     </div>
 
+    <!-- seccion de traslados -->
+    <div class="transfer-section" id="transfer-section" style="display: none;">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="transfer-container">
+              <div class="transfer-header">
+                <h4 class="transfer-title">Búsqueda de Traslados</h4>
+                <button class="add-transfer-btn" id="add-transfer-btn">
+                  <span>+</span>
+                </button>
+              </div>
+              
+              <div class="transfer-search-form">
+                  <!-- Tipo de traslado -->
+                  <div class="transfer-type-section">
+                    <label class="form-label">Tipo de traslado</label>
+                    <div class="transfer-type-buttons">
+                      <button class="transfer-type-btn active" data-type="taxi" id="taxi-btn">
+                        <span class="transfer-icon">🚕</span>
+                        <span>Taxi</span>
+                      </button>
+                      <button class="transfer-type-btn" data-type="bus" id="bus-btn">
+                        <span class="transfer-icon">🚌</span>
+                        <span>Autobús</span>
+                      </button>
+                      <button class="transfer-type-btn" data-type="train" id="train-btn">
+                        <span class="transfer-icon">🚂</span>
+                        <span>Tren</span>
+                      </button>
+                      <button class="transfer-type-btn" data-type="ferry" id="ferry-btn">
+                        <span class="transfer-icon">⛴️</span>
+                        <span>Ferry</span>
+                      </button>
+                    </div>
+                  </div>
+                
+                <!-- Origen y destino -->
+                <div class="row mt-4">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Desde</label>
+                      <input type="text" class="form-control" id="transfer-from" placeholder="Ciudad de origen">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Hasta</label>
+                      <input type="text" class="form-control" id="transfer-to" placeholder="Ciudad de destino">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Fecha de viaje -->
+                <div class="row mt-3">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Fecha de viaje</label>
+                      <input type="text" class="form-control" id="transfer-date" placeholder="Seleccionar fecha">
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Hora preferida</label>
+                      <select class="form-control" id="transfer-time">
+                        <option value="">Cualquier hora</option>
+                        <option value="morning">Mañana (6:00 - 12:00)</option>
+                        <option value="afternoon">Tarde (12:00 - 18:00)</option>
+                        <option value="evening">Noche (18:00 - 24:00)</option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Pasajeros y búsqueda -->
+                <div class="row mt-3">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Cantidad de pasajeros</label>
+                      <div class="counter-control">
+                        <button class="counter-btn" id="transfer-passengers-minus">−</button>
+                        <span class="counter-value" id="transfer-passengers-value">1</span>
+                        <button class="counter-btn" id="transfer-passengers-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 d-flex align-items-end">
+                    <button class="search-transfer-btn" id="search-transfer-btn">
+                      Buscar Traslados
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="transfer-results" id="transfer-results" style="display: none;">
+                <div class="results-header">
+                  <h5>Resultados de búsqueda</h5>
+                  <p class="results-subtitle">Selecciona el traslado que mejor se adapte a tus necesidades</p>
+                </div>
+                
+                <div class="transfer-cards-container" id="transfer-cards-container">
+                  <!-- Las tarjetas de traslados se generarán aquí dinámicamente -->
+                </div>
+                
+                <!-- JSON oculto para debugging -->
+                <details class="debug-section">
+                  <summary>Ver datos JSON (desarrollo)</summary>
+                  <pre id="transfer-json-output"></pre>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- seccion de tours -->
+    <div class="tour-section" id="tour-section" style="display: none;">
+      <div class="container mt-5">
+        <div class="row justify-content-center">
+          <div class="col-md-10">
+            <div class="tour-container">
+              <div class="tour-header">
+                <h4 class="tour-title">Búsqueda de Tours</h4>
+                <button class="add-tour-btn" id="add-tour-btn">
+                  <span>+</span>
+                </button>
+              </div>
+              
+              <div class="tour-search-form">
+                <!-- Tipo de tour -->
+                <div class="tour-type-section">
+                  <label class="form-label">Tipo de tour</label>
+                  <div class="tour-type-buttons">
+                    <button class="tour-type-btn active" data-type="city" id="city-btn">
+                      <span class="tour-icon">🏛️</span>
+                      <span>Ciudad</span>
+                    </button>
+                    <button class="tour-type-btn" data-type="nature" id="nature-btn">
+                      <span class="tour-icon">🌿</span>
+                      <span>Naturaleza</span>
+                    </button>
+                    <button class="tour-type-btn" data-type="adventure" id="adventure-btn">
+                      <span class="tour-icon">⛰️</span>
+                      <span>Aventura</span>
+                    </button>
+                    <button class="tour-type-btn" data-type="cultural" id="cultural-btn">
+                      <span class="tour-icon">🎭</span>
+                      <span>Cultural</span>
+                    </button>
+                  </div>
+                </div>
+                
+                <!-- Destino y fecha -->
+                <div class="row mt-4">
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Destino</label>
+                      <input type="text" class="form-control" id="tour-destination" placeholder="Ciudad o lugar de interés">
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-group">
+                      <label class="form-label">Fecha del tour</label>
+                      <input type="text" class="form-control" id="tour-date" placeholder="Seleccionar fecha">
+                    </div>
+                  </div>
+                </div>
+                
+                <!-- Duración y participantes -->
+                <div class="row mt-3">
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">Duración</label>
+                      <select class="form-control" id="tour-duration">
+                        <option value="half">Medio día (4 horas)</option>
+                        <option value="full">Día completo (8 horas)</option>
+                        <option value="multi">Múltiples días</option>
+                      </select>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4">
+                    <div class="form-group">
+                      <label class="form-label">Participantes</label>
+                      <div class="counter-control">
+                        <button class="counter-btn" id="tour-participants-minus">−</button>
+                        <span class="counter-value" id="tour-participants-value">1</span>
+                        <button class="counter-btn" id="tour-participants-plus">+</button>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-4 d-flex align-items-end">
+                    <button class="search-tour-btn" id="search-tour-btn">
+                      Buscar Tours
+                    </button>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="tour-results" id="tour-results" style="display: none;">
+                <div class="results-header">
+                  <h5>Resultados de búsqueda</h5>
+                  <p class="results-subtitle">Selecciona el tour que mejor se adapte a tus intereses</p>
+                </div>
+                <div class="tour-cards-container" id="tour-cards-container">
+                  <!-- Las tarjetas de tours se generarán aquí dinámicamente -->
+                </div>
+                <!-- JSON oculto para debugging -->
+                <details class="debug-section">
+                  <summary>Ver datos JSON (desarrollo)</summary>
+                  <pre id="tour-json-output"></pre>
+                </details>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón flotante de resumen de reserva -->
+    <div class="reservation-summary-btn" id="reservation-summary-btn">
+      <div class="summary-icon">
+        <span>📋</span>
+      </div>
+      <div class="summary-content">
+        <div class="summary-title">Mi Reserva</div>
+        <div class="summary-count" id="summary-count">0 servicios</div>
+        <div class="summary-total" id="summary-total">$0</div>
+      </div>
+    </div>
+
+    <!-- Modal de resumen detallado -->
+    <div class="reservation-modal" id="reservation-modal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Resumen de tu Reserva</h3>
+          <button class="modal-close" id="modal-close">&times;</button>
+        </div>
+        <div class="modal-body" id="modal-body">
+          <!-- Contenido dinámico del resumen -->
+        </div>
+        <div class="modal-footer">
+          <div class="total-summary">
+            <div class="total-line">
+              <span>Total de la reserva:</span>
+              <span class="total-amount" id="modal-total">$0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </body>
 </html>
